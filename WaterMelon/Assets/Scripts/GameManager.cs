@@ -1,10 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
     public GameObject[] fruit;
     public Transform genTransform;
     public float timeCheck;
@@ -16,19 +17,24 @@ public class GameManager : MonoBehaviour
     public static event Action<int> OnPointChanged;
     public static event Action<int> OnBestScoreChanged;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
+        BestScore = PlayerPrefs.GetInt("BestScore");
         GenObject();
+        OnPointChanged?.Invoke(Point);
+        OnBestScoreChanged?.Invoke(BestScore);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(isGen ==  false)
+        if (isGen == false)
         {
             timeCheck -= Time.deltaTime;
-            if(timeCheck <= 0.0f)
+            if (timeCheck <= 0.0f)
             {
                 int RandNum = UnityEngine.Random.Range(0, 3);
                 GameObject Temp = Instantiate(fruit[RandNum]);
@@ -37,13 +43,11 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     public void GenObject()
     {
         isGen = false;
         timeCheck = 1.0f;
     }
-
     public void MergeObject(int index, Vector3 position)
     {
         GameObject Temp = Instantiate(fruit[index + 1]);
@@ -57,7 +61,7 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         int BestScore = PlayerPrefs.GetInt("BestScore");
-        if(Point > BestScore)
+        if (Point > BestScore)
         {
             BestScore = Point;
             PlayerPrefs.SetInt("BestScore", BestScore);
